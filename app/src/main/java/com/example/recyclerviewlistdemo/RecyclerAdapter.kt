@@ -11,21 +11,19 @@ import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
+import com.example.recyclerviewlistdemo.model.BatchInfoItem
 
 class RecyclerAdapter(
-    private val itemList: MutableList<demomodel>,
-    private val context: Context, private val addItem: (demomodel) -> Unit,
-    private val updateItem: (Int, String, Boolean) -> Unit
-) : RecyclerView.Adapter<RecyclerAdapter.ItemViewHolder>() {
+    private val  batches: MutableList<BatchInfoItem>,
+    private val onSave: (Int, BatchInfoItem) -> Unit) : RecyclerView.Adapter<RecyclerAdapter.ItemViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.item_layout, parent, false)
+        val view = LayoutInflater.from(parent.context).inflate(R.layout.batch_item_layout, parent, false)
         return ItemViewHolder(view)
     }
-
     override fun onBindViewHolder(holder: ItemViewHolder, position: Int) {
-        val currentItem = itemList[position]
-        holder.text1.text = currentItem.id
+        val batch = batches[position]
+      /*  holder.text1.text = currentItem.id
         holder.text2.setText(currentItem.name)
 
         if (currentItem.isUpdate) {
@@ -34,51 +32,54 @@ class RecyclerAdapter(
         } else {
             holder.cl.setBackgroundColor(Color.TRANSPARENT)
             holder.text3.setImageResource(R.drawable.ic_add_black)
+        }*/
+
+        holder.srNo.setText("${position+1}")
+        holder.tvBatchBarcode.setText("${batch.batchBarcodeNo }")
+        holder.tvGeneratedBatchBarcode.setText("${batch.generatedBatchBarcodeNo }")
+        updateView(holder, batch)
+        holder.ivSave.setOnClickListener {
+            batch.isUpdate = true
+            updateView(holder, batch)
+            onSave(position, batch)
         }
 
-        val isAddDrawable = holder.text3.drawable.constantState == ContextCompat.getDrawable(context, R.drawable.ic_add_black)?.constantState
-
-        holder.text3.setOnClickListener {
-            if (!isAddDrawable) {
-                val baseUsername = currentItem.username
-                val highestNumber =
-                    itemList.mapNotNull { it.id.substringAfterLast("-").toIntOrNull() }.maxOrNull()
-                        ?: 0
-                // Add new item with default values
-                val newItem = demomodel(
-                    "$baseUsername-${highestNumber + 1}",
-                    holder.text2.text.toString().trim(),
-                    "$baseUsername",
-                    false)
-                addItem(newItem)
-                // Update current item's username
-                updateItem(position, holder.text2.text.toString(), true)
-            } else {
-                updateItem(position, holder.text2.text.toString(), true)
-            }
-        }
-
-
-        // Example color change
-
-
-        holder.text4.setOnClickListener {
-            if (itemList.size > 1) { // Prevent removal if only one item remains
-                itemList.removeAt(position)
+        holder.ivDelete.setOnClickListener {
+            /*if (batches.size >= 1) {  // Check to avoid removing the last item
+                batches.removeAt(position)
                 notifyItemRemoved(position)
+                notifyItemRangeChanged(position, batches.size) // To update the positions
+            }*/
+            holder.ivDelete.setOnClickListener {
+                // Remove the current item
+                batches.removeAt(position)
+                notifyItemRemoved(position)
+                notifyItemRangeChanged(position, batches.size) // To update the positions of the remaining items
             }
         }
+
 
     }
+    private fun updateView(holder: ItemViewHolder, batchInfoItem: BatchInfoItem) {
+        with(holder) {
+            if (batchInfoItem.isUpdate) {
+                cl.setBackgroundColor(Color.LTGRAY)
+            } else {
+                cl.setBackgroundColor(Color.TRANSPARENT)
 
-    override fun getItemCount() = itemList.size
+            }
+        }
+    }
 
+    override fun getItemCount() = batches.size
     class ItemViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        var text1: TextView = itemView.findViewById(R.id.text1)
-        var text2: EditText = itemView.findViewById(R.id.text2)
-        var text3: ImageView = itemView.findViewById(R.id.text3)
-        var text4: TextView = itemView.findViewById(R.id.text4)
-        var cl: ConstraintLayout = itemView.findViewById(R.id.cl)
+        var ivSave: ImageView = itemView.findViewById(R.id.ivSave)
+        var srNo: TextView = itemView.findViewById(R.id.srNo)
+        var tvBatchBarcode: TextView = itemView.findViewById(R.id.tvBatchBarcode)
+        var tvGeneratedBatchBarcode: TextView = itemView.findViewById(R.id.tvGeneratedBatchBarcode)
+        var ivDelete: ImageView = itemView.findViewById(R.id.ivDelete)
+        var cl:ConstraintLayout = itemView.findViewById(R.id.cl)
+
     }
 }
 
