@@ -1,6 +1,6 @@
-package com.example.recyclerviewlistdemo.model
+package com.example.recyclerviewlistdemo.grnmodel
 
-data class jsonResponse(
+data class GrnMainPoLineItemModelItem(
     val bpCode: String,
     val bpName: String,
     val createdBy: String,
@@ -11,7 +11,7 @@ data class jsonResponse(
     val poCurrency: Any,
     val poDate: String,
     val poId: Int,
-    val poLineItems: List<PoLineItemds>,
+    val poLineItems: List<PoLineItem>,
     val poNumber: String,
     val poStatus: String,
     val poValidity: String,

@@ -1,8 +1,6 @@
-package com.example.recyclerviewlistdemo.model
+package com.example.recyclerviewlistdemo.grnmodel
 
 data class PoLineItem(
-    val bpCode: String,
-    val bpName: String,
     val balQTY: Int,
     val createdBy: String,
     val createdDate: String,
@@ -19,5 +17,7 @@ data class PoLineItem(
     val poqty: Int,
     val posapLineItemNumber: String,
     val pouom: String,
-    val unitPrice: Any
+    val unitPrice: Any,
+    var isChecked: Boolean = false
+
 )
