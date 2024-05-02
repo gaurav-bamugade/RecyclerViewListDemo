@@ -13,7 +13,7 @@
         android:theme="@style/Theme.RecyclerViewListDemo"
         tools:targetApi="31">
         <activity
-            android:name=".view.GrnMainAddActivity"
+            android:name=".poselectiondemo.PoDemoTestingActivity"
             android:exported="true" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -22,10 +22,13 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".MainActivity"
+            android:name=".view.GrnMainAddActivity"
             android:exported="true">
 
         </activity>
+        <activity
+            android:name=".MainActivity"
+            android:exported="true"></activity>
     </application>
 
 </manifest>
