@@ -18,7 +18,7 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/tvBatchBarcode"/>
 
-        <TextView
+        <EditText
             android:id="@+id/tvBatchBarcode"
             android:layout_width="0dp"
             android:layout_height="wrap_content"

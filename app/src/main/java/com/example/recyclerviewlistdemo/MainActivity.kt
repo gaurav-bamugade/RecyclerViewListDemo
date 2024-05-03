@@ -7,6 +7,7 @@ import android.view.WindowManager
 import androidx.appcompat.app.AppCompatDialog
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.recyclerviewlistdemo.adapter.CustomKeyboard
 import com.example.recyclerviewlistdemo.databinding.ActivityMainBinding
 import com.example.recyclerviewlistdemo.databinding.CreateBatchesDialogBinding
 import com.example.recyclerviewlistdemo.model.BatchInfoItem
@@ -22,7 +23,7 @@ class MainActivity : AppCompatActivity() {
     lateinit var batchInfoItem: BatchInfoItem
     lateinit var poLineItem: PoLineItemds
     private val batches = mutableListOf<BatchInfoItem>()
-
+    private lateinit var customKeyboard: CustomKeyboard
 
 
     private lateinit var dialogBinding: CreateBatchesDialogBinding
@@ -33,6 +34,8 @@ class MainActivity : AppCompatActivity() {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
         addDefaultData()
         dialogBinding = CreateBatchesDialogBinding.inflate(LayoutInflater.from(this))
+        val keyboardView = LayoutInflater.from(this).inflate(R.layout.custom_keyboard, null)
+        customKeyboard = CustomKeyboard(this, keyboardView)
         // Create the dialog
         dialog = AppCompatDialog(this).apply {
             setContentView(dialogBinding.root)
@@ -56,10 +59,11 @@ class MainActivity : AppCompatActivity() {
             adapter.notifyItemInserted(batches.size - 1)
         }
 
-        adapter = RecyclerAdapter(batches) { position, updatedItem ->
+        adapter = RecyclerAdapter(this,batches) { position, updatedItem ->
             batches[position] = updatedItem.copy()
             adapter.notifyItemChanged(position)
         }
+        adapter.setCustomKeyboard(customKeyboard)
         dialogBinding.rcBatches.adapter=adapter
         dialogBinding.rcBatches.layoutManager=LinearLayoutManager(this)
 
@@ -89,120 +93,23 @@ class MainActivity : AppCompatActivity() {
 
     private fun addDefaultData() {
         val jsonString = """
-        [
-            {
-                "poId": 1,
-                "poNumber": "PO001",
-                "posapNumber": "POSAP01",
-                "poDate": "2024-03-09T00:00:00",
-                "bpCode": "KMR12",
-                "bpName": "Kemar Automation 10",
-                "poValidity": "2024-03-15T00:00:00",
-                "poCurrency": null,
-                "poStatus": "Open",
-                "poLineItems": [
-                    {
-                        "poLineItemId": 1,
-                        "poId": 1,
-                        "posapLineItemNumber": "KSAP01",
-                        "itemCode": "KMR10",
-                        "itemName": "Fastener -3",
-                        "itemDescription": "Fastener of size 3",
-                        "poLineNo": 0,
-                        "pouom": "QTY",
-                        "mhType": "Batch",
-                        "poqty": 0,
-                        "balQTY": 0,
-                        "unitPrice": null,
-                        "isActive": true,
-                        "createdBy": "",
-                        "createdDate": "0001-01-01T00:00:00",
-                        "modifiedBy": "",
-                        "modifiedDate": null
-                    },
-                    {
-                        "poLineItemId": 2,
-                        "poId": 1,
-                        "posapLineItemNumber": "KSAP01",
-                        "itemCode": "KMR10",
-                        "itemName": "Fastener -3",
-                        "itemDescription": "Fastener of size 3",
-                        "poLineNo": 0,
-                        "pouom": "QTY",
-                        "mhType": "Batch",
-                        "poqty": 0,
-                        "balQTY": 0,
-                        "unitPrice": null,
-                        "isActive": true,
-                        "createdBy": "",
-                        "createdDate": "0001-01-01T00:00:00",
-                        "modifiedBy": "",
-                        "modifiedDate": null
-                    }
-                ],
-                "isActive": true,
-                "createdBy": "Super Admin",
-                "createdDate": "2024-04-15T18:30:28.623902",
-                "modifiedBy": "",
-                "modifiedDate": null
-            },
-            {
-                "poId": 2,
-                "poNumber": "PO002",
-                "posapNumber": "POSAP02",
-                "poDate": "2024-03-09T00:00:00",
-                "bpCode": "KMR12",
-                "bpName": "Kemar Automation 10",
-                "poValidity": "2024-03-15T00:00:00",
-                "poCurrency": null,
-                "poStatus": "Open",
-                "poLineItems": [
-                    {
-                        "poLineItemId": 3,
-                        "poId": 2,
-                        "posapLineItemNumber": "KSAP01",
-                        "itemCode": "KMR17",
-                        "itemName": "KMR -12",
-                        "itemDescription": "Fastener of size 1",
-                        "poLineNo": 0,
-                        "pouom": "QTY",
-                        "mhType": "Batch",
-                        "poqty": 0,
-                        "balQTY": 0,
-                        "unitPrice": null,
-                        "isActive": true,
-                        "createdBy": "",
-                        "createdDate": "0001-01-01T00:00:00",
-                        "modifiedBy": "",
-                        "modifiedDate": null
-                    },
-                    {
-                        "poLineItemId": 4,
-                        "poId": 2,
-                        "posapLineItemNumber": "KSAP01",
-                        "itemCode": "KMR18",
-                        "itemName": "KMR -12",
-                        "itemDescription": "Fastener of size 1",
-                        "poLineNo": 0,
-                        "pouom": "QTY",
-                        "mhType": "Batch",
-                        "poqty": 0,
-                        "balQTY": 0,
-                        "unitPrice": null,
-                        "isActive": true,
-                        "createdBy": "",
-                        "createdDate": "0001-01-01T00:00:00",
-                        "modifiedBy": "",
-                        "modifiedDate": null
-                    }
-                ],
-                "isActive": true,
-                "createdBy": "Super Admin",
-                "createdDate": "2024-04-15T18:32:42.7209888",
-                "modifiedBy": "",
-                "modifiedDate": null
-            }
-        ]
+        {
+            "bpCode": "KMR12",
+            "bpName": "Kemar Automation 10",
+            "poLineItemId": 1,
+            "poId": 1,
+            "posapLineItemNumber": "KSAP01",
+            "posapNumber": "POSAP01",
+            "itemCode": "KMR10",
+            "itemName": "Fastener -3",
+            "itemDescription": "Fastener of size 3",
+            "poLineNo": 0,
+            "pouom": "QTY",
+            "mhType": "Batch",
+            "poqty": 0,
+            "balQTY": 0,
+            "unitPrice": null
+        }
     """
 
         val listType = object : TypeToken<PoLineItemds>() {}.type

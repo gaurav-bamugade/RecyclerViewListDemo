@@ -11,12 +11,20 @@ import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
+import com.example.recyclerviewlistdemo.adapter.CustomKeyboard
 import com.example.recyclerviewlistdemo.model.BatchInfoItem
 
 class RecyclerAdapter(
+    private val context: Context,
     private val  batches: MutableList<BatchInfoItem>,
-    private val onSave: (Int, BatchInfoItem) -> Unit) : RecyclerView.Adapter<RecyclerAdapter.ItemViewHolder>() {
+    private val onSave: (Int, BatchInfoItem) -> Unit
+)
+: RecyclerView.Adapter<RecyclerAdapter.ItemViewHolder>() {
+    private var customKeyboard: CustomKeyboard? = null
 
+    fun setCustomKeyboard(customKeyboard: CustomKeyboard) {
+        this.customKeyboard = customKeyboard
+    }
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.batch_item_layout, parent, false)
         return ItemViewHolder(view)
@@ -57,6 +65,18 @@ class RecyclerAdapter(
                 notifyItemRangeChanged(position, batches.size) // To update the positions of the remaining items
             }
         }
+        holder.tvBatchBarcode.showSoftInputOnFocus = false
+        holder.tvBatchBarcode.setOnClickListener {
+            customKeyboard!!.setTargetEditText(holder.tvBatchBarcode)
+            customKeyboard!!.showAt(holder.itemView)
+        }
+        holder.tvBatchBarcode.setOnFocusChangeListener { v, hasFocus ->
+            if (hasFocus) {
+                customKeyboard!!.setTargetEditText(holder.tvBatchBarcode)
+                customKeyboard!!.showAt(holder.itemView)
+            }
+        }
+
 
 
     }
@@ -75,7 +95,7 @@ class RecyclerAdapter(
     class ItemViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         var ivSave: ImageView = itemView.findViewById(R.id.ivSave)
         var srNo: TextView = itemView.findViewById(R.id.srNo)
-        var tvBatchBarcode: TextView = itemView.findViewById(R.id.tvBatchBarcode)
+        var tvBatchBarcode: EditText = itemView.findViewById(R.id.tvBatchBarcode)
         var tvGeneratedBatchBarcode: TextView = itemView.findViewById(R.id.tvGeneratedBatchBarcode)
         var ivDelete: ImageView = itemView.findViewById(R.id.ivDelete)
         var cl:ConstraintLayout = itemView.findViewById(R.id.cl)
