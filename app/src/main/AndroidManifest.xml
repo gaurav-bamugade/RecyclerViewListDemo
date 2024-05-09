@@ -13,23 +13,24 @@
         android:theme="@style/Theme.RecyclerViewListDemo"
         tools:targetApi="31">
         <activity
-            android:name=".poselectiondemo.PoDemoTestingActivity"
+            android:name=".view.demoCalculation"
             android:exported="true" >
-
-        </activity>
-        <activity
-            android:name=".view.GrnMainAddActivity"
-            android:exported="true">
-
-        </activity>
-        <activity
-            android:name=".MainActivity"
-            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+        <activity
+            android:name=".poselectiondemo.PoDemoTestingActivity"
+            android:exported="true"></activity>
+        <activity
+            android:name=".view.GrnMainAddActivity"
+            android:exported="true"></activity>
+        <activity
+            android:name=".MainActivity"
+            android:exported="true">
+
         </activity>
     </application>
 
