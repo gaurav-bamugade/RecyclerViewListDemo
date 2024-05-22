@@ -59,4 +59,8 @@ dependencies {
 
     implementation ("com.squareup.retrofit2:retrofit:2.9.0")
     implementation ("com.squareup.retrofit2:converter-gson:2.9.0")
+
+    implementation ("com.zebra.sdk:linkos:2.14.5198")
+
+    implementation ("com.zebra.sdk:usb:2.14.5198")
 }
